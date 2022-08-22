@@ -16,6 +16,18 @@ VALUES ("Sales Lead", 100000, 1),
        ("Legal Team Lead", 250000, 4),
        ("Lawyer", 190000, 4);
 
+INSERT INTO employee (first_name, last_name, manager_id, role_id)
+VALUES ("Anna", "Lawson", NULL, 1),
+       ("Brandon", "Smith", 1, 2),
+       ("Cindy", "Turner", NULL, 3),
+       ("Dan", "Peppers", 3, 4),
+       ("Emmy", "Johnson", NULL, 5),
+       ("Faith", "Erving", 5, 6),
+       ("Gabe", "Rainer", NULL, 7),
+       ("Hillary", "Duff", 7, 8);
+
 SELECT * FROM department;
 
 SELECT * FROM role;
+
+SELECT * FROM employee;
