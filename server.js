@@ -83,7 +83,8 @@ const addRole = () => {
         }, 
         {
             type: "input", 
-            name: "department_id"
+            name: "department_id",
+            message: "what is the role's department id?"
         }
     ])
         .then(function( {title, salary, department_id} ) {
