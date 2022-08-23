@@ -40,6 +40,7 @@ const menu = () => {
             } else if (data.menu === "Add an employee") {
                 addEmployee();
             } else if (data.menu === "Update an employee role") {
+                updateRole();
                 console.log("Updated an employee role");
             } else {
                 init();
@@ -48,12 +49,11 @@ const menu = () => {
 };
 
 const viewDeprtments = () => {
-    const sql = 'SELECT * FROM department';
+    const sql = 'SELECT * FROM department GROUP BY name';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
         } else if (data) {
-            console.log(data);
             console.table(data);
             menu();
         }
@@ -61,12 +61,11 @@ const viewDeprtments = () => {
 };
 
 const viewRoles = () => {
-    const sql = 'SELECT * FROM role';
+    const sql = 'SELECT * FROM role GROUP BY title';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
         } else if (data) {
-            console.log(data);
             console.table(data);
             menu();
         }
@@ -74,12 +73,11 @@ const viewRoles = () => {
 };
 
 const viewEmployees = () => {
-    const sql = 'SELECT * FROM employee';
+    const sql = 'SELECT * FROM employee GROUP BY first_name, last_name';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
         } else if (data) {
-            console.log(data);
             console.table(data);
             menu();
         }
@@ -176,6 +174,59 @@ const addEmployee = () => {
             })
         })
 };
+
+const updateRole = () => {
+    db.query(`SELECT * FROM employee GROUP BY first_name, last_name`, (err, data) => {
+        if (err) {
+            console.log(err);
+        }
+
+        let employees = [];
+
+        for (let i = 0; i < data.length; i++) {
+            employees.push(data[i].first_name)
+        }
+
+        db.query(`SELECT * FROM role GROUP BY title`, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+
+            let roles = [];
+
+            for (let i = 0; i < data.length; i++) {
+                roles.push(data[i].title)
+            }
+
+            return inquirer.prompt([
+                {
+                    name: 'employee_id',
+                    message: "Please select which employee's role you would like to update.",
+                    type: 'list',
+                    choices: employees
+                },
+                {
+                    name: 'role_id',
+                    message: "Please select the new role for the employee.",
+                    type: 'list',
+                    choices: roles
+                }
+            ])
+                .then(function ({ employee_id, role_id }) {
+                    const sql = `UPDATE employee SET role_id = ${roles.indexOf(role_id) + 1} WHERE id = ${employees.indexOf(employee_id) + 1}`
+                    db.query(sql, (err, data) => {
+                        if (err) {
+                            console.log(err);
+                        } else if (data) {
+                            console.log(data);
+                            menu();
+                        }
+                    })
+                })
+        })
+
+    })
+}
 
 const init = () => {
     db.end();
