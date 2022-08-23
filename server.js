@@ -40,12 +40,34 @@ const menu = () => {
             } else if (data.menu === "View all departments") {
                 console.log("View all departments")
             } else if (data.menu === "Add department") {
-                console.log("Add department");
+                addDepartment();
             } else {
                 init();
             }
         });
 };
+
+const addDepartment = () => {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "What is the department's name?"
+        }
+    ])
+        .then(function( {name} ) {
+            const sql = `INSERT INTO department (name) VALUES ('${name}')`;
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else if (result) {
+                    console.log(result);
+                    console.log("Added department");
+                    menu();
+                }
+            })
+        })
+}
 
 const init = () => {
     db.end();
