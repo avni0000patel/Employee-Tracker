@@ -21,30 +21,42 @@ const menu = () => {
     return inquirer.prompt([
         {
             type: "list",
-            message: "Please select one of the following options from the menu.",
             name: "menu",
+            message: "Please select one of the following options from the menu.",
             choices: ["View all employees", "Add employee", "Update employee role", "View all roles", "Add role", "View all departments", "Add department", "Quit"]
         },
     ])
         .then((data) => {
             if (data.menu === "View all employees") {
-                console.log("View all employees");
+                // viewEmployee();
             } else if (data.menu === "Add employee") {
                 addEmployee();
             } else if (data.menu === "Update employee role") {
                 console.log("Update employee role");
             } else if (data.menu === "View all roles") {
-                console.log("View all roles");
+                // viewRole();
             } else if (data.menu === "Add role") {
                 addRole();
             } else if (data.menu === "View all departments") {
-                console.log("View all departments")
+                viewDeprtment();
             } else if (data.menu === "Add department") {
                 addDepartment();
             } else {
                 init();
             }
         });
+};
+
+const viewDeprtment = () => {
+    const sql = 'SELECT * FROM department';
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else if (data) {
+            console.log(data);
+            menu();
+        }
+    })
 };
 
 const addDepartment = () => {
@@ -67,7 +79,7 @@ const addDepartment = () => {
                 }
             })
         })
-}
+};
 
 const addRole = () => {
     return inquirer.prompt([
@@ -99,7 +111,7 @@ const addRole = () => {
                 }
             })
         })
-}
+};
 
 const addEmployee = () => {
     return inquirer.prompt([
@@ -136,7 +148,7 @@ const addEmployee = () => {
                 }
             })
         })
-}
+};
 
 const init = () => {
     db.end();
