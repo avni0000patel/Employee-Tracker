@@ -30,7 +30,7 @@ const menu = () => {
             if (data.menu === "View all employees") {
                 console.log("View all employees");
             } else if (data.menu === "Add employee") {
-                console.log("Add employee");
+                addEmployee();
             } else if (data.menu === "Update employee role") {
                 console.log("Update employee role");
             } else if (data.menu === "View all roles") {
@@ -95,6 +95,43 @@ const addRole = () => {
                 } else if (result) {
                     console.log(result);
                     console.log("Added role");
+                    menu();
+                }
+            })
+        })
+}
+
+const addEmployee = () => {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is the employee's first name?"
+        }, 
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the employee's last name?"
+        }, 
+        {
+            type: "input", 
+            name: "manager_id",
+            message: "What is the manager's id?"
+        }, 
+        {
+            type: "input", 
+            name: "role_id",
+            message: "What is the role's id?"
+        }
+    ])
+        .then(function( {first_name, last_name, manager_id, role_id} ) {
+            const sql = `INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ( '${first_name}', '${last_name}', '${manager_id}', '${role_id}' )`;
+            db.query(sql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else if (result) {
+                    console.log(result);
+                    console.log("Added employee");
                     menu();
                 }
             })
