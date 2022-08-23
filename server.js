@@ -34,7 +34,7 @@ const menu = () => {
             } else if (data.menu === "Update employee role") {
                 console.log("Update employee role");
             } else if (data.menu === "View all roles") {
-                // viewRole();
+                viewRole();
             } else if (data.menu === "Add role") {
                 addRole();
             } else if (data.menu === "View all departments") {
@@ -49,6 +49,18 @@ const menu = () => {
 
 const viewDeprtment = () => {
     const sql = 'SELECT * FROM department';
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.log(err);
+        } else if (data) {
+            console.log(data);
+            menu();
+        }
+    })
+};
+
+const viewRole = () => {
+    const sql = 'SELECT * FROM role';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
