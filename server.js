@@ -23,31 +23,31 @@ const menu = () => {
             type: "list",
             name: "menu",
             message: "Please select one of the following options from the menu.",
-            choices: ["View all employees", "Add employee", "Update employee role", "View all roles", "Add role", "View all departments", "Add department", "Quit"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Quit"]
         },
     ])
         .then((data) => {
-            if (data.menu === "View all employees") {
-                viewEmployee();
-            } else if (data.menu === "Add employee") {
-                addEmployee();
-            } else if (data.menu === "Update employee role") {
-                console.log("Update employee role");
+            if (data.menu === "View all departments") {
+                viewDeprtments();
             } else if (data.menu === "View all roles") {
-                viewRole();
-            } else if (data.menu === "Add role") {
-                addRole();
-            } else if (data.menu === "View all departments") {
-                viewDeprtment();
-            } else if (data.menu === "Add department") {
+                viewRoles();
+            } else if (data.menu === "View all employees") {
+                viewEmployees();
+            } else if (data.menu === "Add a department") {
                 addDepartment();
+            } else if (data.menu === "Add a role") {
+                addRole();
+            } else if (data.menu === "Add an employee") {
+                addEmployee();
+            } else if (data.menu === "Update an employee role") {
+                console.log("Updated an employee role");
             } else {
                 init();
             }
         });
 };
 
-const viewDeprtment = () => {
+const viewDeprtments = () => {
     const sql = 'SELECT * FROM department';
     db.query(sql, (err, data) => {
         if (err) {
@@ -59,7 +59,7 @@ const viewDeprtment = () => {
     })
 };
 
-const viewRole = () => {
+const viewRoles = () => {
     const sql = 'SELECT * FROM role';
     db.query(sql, (err, data) => {
         if (err) {
@@ -71,7 +71,7 @@ const viewRole = () => {
     })
 };
 
-const viewEmployee = () => {
+const viewEmployees = () => {
     const sql = 'SELECT * FROM employee';
     db.query(sql, (err, data) => {
         if (err) {
