@@ -184,7 +184,7 @@ const updateRole = () => {
         let employees = [];
 
         for (let i = 0; i < data.length; i++) {
-            employees.push(data[i].first_name)
+            employees.push(data[i].first_name + " " + data[i].last_name)
         }
 
         db.query(`SELECT * FROM role GROUP BY title`, (err, data) => {
