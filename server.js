@@ -60,7 +60,7 @@ const viewDeprtments = () => {
 };
 
 const viewRoles = () => {
-    const sql = 'SELECT  r.id, r.title, r.salary, d.name as department FROM role AS r INNER JOIN department AS d ON r.department_id = d.id GROUP BY r.title';
+    const sql = 'SELECT  r.id, r.title, d.name as department, r.salary FROM role AS r INNER JOIN department AS d ON r.department_id = d.id GROUP BY r.title';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
@@ -72,7 +72,7 @@ const viewRoles = () => {
 };
 
 const viewEmployees = () => {
-    const sql = 'SELECT * FROM employee GROUP BY first_name, last_name';
+    const sql = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, " ", m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id GROUP BY e.first_name, e.last_name';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
