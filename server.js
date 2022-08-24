@@ -61,7 +61,7 @@ const viewDeprtments = () => {
 };
 
 const viewRoles = () => {
-    const sql = 'SELECT * FROM role GROUP BY title';
+    const sql = 'SELECT  r.id, r.title, r.salary, d.name as department FROM role AS r INNER JOIN department AS d ON r.department_id = d.id GROUP BY r.title';
     db.query(sql, (err, data) => {
         if (err) {
             console.log(err);
