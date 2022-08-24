@@ -23,7 +23,7 @@ const menu = () => {
             type: "list",
             name: "menu",
             message: "Please select one of the following options from the menu.",
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee manager", "Delete a department", "Quit"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee manager", "Delete a department", "Delete a role", "Quit"]
         },
     ])
         .then((result) => {
@@ -45,6 +45,8 @@ const menu = () => {
                 updateManager();
             } else if (result.menu === "Delete a department") {
                 deleteDepartment();
+            } else if (result.menu === "Delete a role") {
+                deleteRole();
             } else {
                 init();
             }
@@ -363,7 +365,7 @@ const deleteDepartment = () => {
             {
                 type: "list",
                 name: "name",
-                message: "Which department would you like to remove?",
+                message: "Please select which department would you like to delete.",
                 choices: departments
             }
         ])
@@ -378,6 +380,46 @@ const deleteDepartment = () => {
                     } else {
                         console.log(result);
                         console.log("Successfully deleted department!");
+                        menu();
+                    }
+                })
+            })
+
+    })
+}
+
+const deleteRole = () => {
+    const sql = `SELECT * FROM role GROUP BY title`;
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+
+        let roles = [];
+
+        for (let i = 0; i < result.length; i++) {
+            roles.push(result[i].title)
+        }
+
+        return inquirer.prompt([
+            {
+                type: "list",
+                name: "title",
+                message: "Please select which role would you like to delete.",
+                choices: roles
+            }
+        ])
+            .then(( {title} ) => {
+
+                let deletedRow = `${title}`;
+
+                const sql = `DELETE FROM role WHERE title = ?`;
+                db.query(sql, deletedRow, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(result);
+                        console.log("Successfully deleted role!");
                         menu();
                     }
                 })
