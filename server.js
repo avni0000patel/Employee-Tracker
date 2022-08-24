@@ -26,20 +26,20 @@ const menu = () => {
             choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Quit"]
         },
     ])
-        .then((data) => {
-            if (data.menu === "View all departments") {
+        .then((result) => {
+            if (result.menu === "View all departments") {
                 viewDeprtments();
-            } else if (data.menu === "View all roles") {
+            } else if (result.menu === "View all roles") {
                 viewRoles();
-            } else if (data.menu === "View all employees") {
+            } else if (result.menu === "View all employees") {
                 viewEmployees();
-            } else if (data.menu === "Add a department") {
+            } else if (result.menu === "Add a department") {
                 addDepartment();
-            } else if (data.menu === "Add a role") {
+            } else if (result.menu === "Add a role") {
                 addRole();
-            } else if (data.menu === "Add an employee") {
+            } else if (result.menu === "Add an employee") {
                 addEmployee();
-            } else if (data.menu === "Update an employee role") {
+            } else if (result.menu === "Update an employee role") {
                 updateRole();
             } else {
                 init();
@@ -49,11 +49,11 @@ const menu = () => {
 
 const viewDeprtments = () => {
     const sql = 'SELECT * FROM department GROUP BY name';
-    db.query(sql, (err, data) => {
+    db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
-        } else if (data) {
-            console.table(data);
+        } else if (result) {
+            console.table(result);
             menu();
         }
     })
@@ -61,11 +61,11 @@ const viewDeprtments = () => {
 
 const viewRoles = () => {
     const sql = 'SELECT  r.id, r.title, d.name as department, r.salary FROM role AS r INNER JOIN department AS d ON r.department_id = d.id GROUP BY r.title';
-    db.query(sql, (err, data) => {
+    db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
-        } else if (data) {
-            console.table(data);
+        } else if (result) {
+            console.table(result);
             menu();
         }
     })
@@ -73,11 +73,11 @@ const viewRoles = () => {
 
 const viewEmployees = () => {
     const sql = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, " ", m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id GROUP BY e.first_name, e.last_name';
-    db.query(sql, (err, data) => {
+    db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
-        } else if (data) {
-            console.table(data);
+        } else if (result) {
+            console.table(result);
             menu();
         }
     })
@@ -108,13 +108,13 @@ const addDepartment = () => {
 const addRole = () => {
     let departments = []
 
-    db.query(`SELECT * FROM department GROUP BY name`, (err, data) => {
+    db.query(`SELECT * FROM department GROUP BY name`, (err, result) => {
         if (err) {
             console.log(err);
         }
 
-        for (let i = 0; i < data.length; i++) {
-            departments.push(data[i].name)
+        for (let i = 0; i < result.length; i++) {
+            departments.push(result[i].name)
 
         }
 
@@ -157,24 +157,24 @@ const addRole = () => {
 const addEmployee = () => {
     let roles = [];
 
-    db.query(`SELECT * FROM role`, (err, data) => {
+    db.query(`SELECT * FROM role`, (err, result) => {
         if (err) {
             console.log(err);
         }
 
-        for (let i = 0; i < data.length; i++) {
-            roles.push(data[i].title);
+        for (let i = 0; i < result.length; i++) {
+            roles.push(result[i].title);
         }
 
         let employees = [];
 
-        db.query(`SELECT * FROM employee`, (err, data) => {
+        db.query(`SELECT * FROM employee`, (err, result) => {
             if (err) {
                 console.log(err);
             }
 
-            for (let i = 0; i < data.length; i++) {
-                employees.push(data[i].first_name + " " + data[i].last_name);
+            for (let i = 0; i < result.length; i++) {
+                employees.push(result[i].first_name + " " + result[i].last_name);
             }
 
             return inquirer.prompt([
@@ -234,26 +234,26 @@ const addEmployee = () => {
 };
 
 const updateRole = () => {
-    db.query(`SELECT * FROM employee GROUP BY first_name, last_name`, (err, data) => {
+    db.query(`SELECT * FROM employee GROUP BY first_name, last_name`, (err, result) => {
         if (err) {
             console.log(err);
         }
 
         let employees = [];
 
-        for (let i = 0; i < data.length; i++) {
-            employees.push(data[i].first_name + " " + data[i].last_name)
+        for (let i = 0; i < result.length; i++) {
+            employees.push(result[i].first_name + " " + result[i].last_name)
         }
 
-        db.query(`SELECT * FROM role GROUP BY title`, (err, data) => {
+        db.query(`SELECT * FROM role GROUP BY title`, (err, result) => {
             if (err) {
                 console.log(err);
             }
 
             let roles = [];
 
-            for (let i = 0; i < data.length; i++) {
-                roles.push(data[i].title)
+            for (let i = 0; i < result.length; i++) {
+                roles.push(result[i].title)
             }
 
             return inquirer.prompt([
@@ -272,11 +272,11 @@ const updateRole = () => {
             ])
                 .then(function ({ employee_id, role_id }) {
                     const sql = `UPDATE employee SET role_id = ${roles.indexOf(role_id) + 1} WHERE id = ${employees.indexOf(employee_id) + 1}`
-                    db.query(sql, (err, data) => {
+                    db.query(sql, (err, result) => {
                         if (err) {
                             console.log(err);
-                        } else if (data) {
-                            console.log(data);
+                        } else if (result) {
+                            console.log(result);
                             menu();
                         }
                     })
