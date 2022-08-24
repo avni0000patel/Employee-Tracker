@@ -23,7 +23,7 @@ const menu = () => {
             type: "list",
             name: "menu",
             message: "Please select one of the following options from the menu.",
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee manager", "Quit"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee manager", "Delete a department", "Quit"]
         },
     ])
         .then((result) => {
@@ -43,6 +43,8 @@ const menu = () => {
                 updateRole();
             } else if (result.menu === "Update an employee manager") {
                 updateManager();
+            } else if (result.menu === "Delete a department") {
+                deleteDepartment();
             } else {
                 init();
             }
@@ -260,15 +262,15 @@ const updateRole = () => {
 
             return inquirer.prompt([
                 {
+                    type: "list",
                     name: "employee_id",
                     message: "Please select which employee's role you would like to update.",
-                    type: "list",
                     choices: employees
                 },
                 {
+                    type: "list",
                     name: "role_id",
                     message: "Please select the new role for the employee.",
-                    type: "list",
                     choices: roles
                 }
             ])
@@ -302,15 +304,15 @@ const updateManager = () => {
 
         return inquirer.prompt([
             {
+                type: "list",
                 name: "employee_id",
                 message: "Please select which employee's manager you would like to update.",
-                type: "list",
                 choices: employees
             },
             {
+                type: "list",
                 name: "manager_id",
                 message: "Please select the new manager for the employee.",
-                type: "list",
                 choices: ["null"].concat(employees)
             }
         ])
@@ -342,6 +344,46 @@ const updateManager = () => {
             })
     })
 
+}
+
+const deleteDepartment = () => {
+    const sql = `SELECT * FROM department GROUP BY name`;
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.log(err);
+        }
+
+        let departments = [];
+
+        for (let i = 0; i < result.length; i++) {
+            departments.push(result[i].name)
+        }
+
+        return inquirer.prompt([
+            {
+                type: "list",
+                name: "name",
+                message: "Which department would you like to remove?",
+                choices: departments
+            }
+        ])
+            .then(( {name} ) => {
+
+                let deletedRow = `${name}`;
+
+                const sql = `DELETE FROM department WHERE name = ?`;
+                db.query(sql, deletedRow, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(result);
+                        console.log("Successfully deleted department!");
+                        menu();
+                    }
+                })
+            })
+
+    })
 }
 
 const init = () => {
