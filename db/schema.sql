@@ -1,13 +1,15 @@
+-- Drop, create, and use databse
 DROP DATABASE IF EXISTS employeeTracker_db;
 CREATE DATABASE employeeTracker_db;
-
 USE employeeTracker_db;
 
+-- Create department table
 CREATE TABLE department (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30)
 );
 
+-- Create role table
 CREATE TABLE role (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30),
@@ -17,6 +19,7 @@ CREATE TABLE role (
     REFERENCES department(id)
 );
 
+-- Create employee table
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30),
@@ -29,9 +32,9 @@ CREATE TABLE employee (
     REFERENCES employee(id)
 );
 
-show databases;
-SELECT DATABASE();
-SHOW TABLES;
-DESCRIBE department;
-DESCRIBE role;
-DESCRIBE employee;
+-- show databases;
+-- SELECT DATABASE();
+-- SHOW TABLES;
+-- DESCRIBE department;
+-- DESCRIBE role;
+-- DESCRIBE employee;

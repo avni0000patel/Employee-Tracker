@@ -26,8 +26,8 @@ VALUES ("Anna", "Lawson", NULL, 1),
        ("Gabe", "Rainer", NULL, 7),
        ("Hillary", "Duff", 7, 8);
 
-SELECT * FROM department GROUP BY name;
+-- SELECT * FROM department GROUP BY name;
 
-SELECT * FROM role GROUP BY title;
+-- SELECT * FROM role GROUP BY title;
 
-SELECT * FROM employee GROUP BY first_name, last_name;
+-- SELECT * FROM employee GROUP BY first_name, last_name;

@@ -2,6 +2,7 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
+// Connect to database
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -17,6 +18,7 @@ db.connect(function (err) {
     console.log("Connected!");
 });
 
+// Menu to show the options
 const menu = () => {
     return inquirer.prompt([
         {
@@ -53,6 +55,8 @@ const menu = () => {
         });
 };
 
+
+// View all departments
 const viewDeprtments = () => {
     const sql = 'SELECT * FROM department GROUP BY name';
     db.query(sql, (err, result) => {
@@ -65,6 +69,7 @@ const viewDeprtments = () => {
     })
 };
 
+// View all roles
 const viewRoles = () => {
     const sql = 'SELECT  r.id, r.title, d.name as department, r.salary FROM role AS r INNER JOIN department AS d ON r.department_id = d.id GROUP BY r.title';
     db.query(sql, (err, result) => {
@@ -77,6 +82,7 @@ const viewRoles = () => {
     })
 };
 
+// View all employees
 const viewEmployees = () => {
     const sql = 'SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, " ", m.last_name) AS manager FROM employee e LEFT JOIN employee m ON m.id = e.manager_id INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id GROUP BY e.first_name, e.last_name';
     db.query(sql, (err, result) => {
@@ -89,6 +95,7 @@ const viewEmployees = () => {
     })
 };
 
+// Add a department
 const addDepartment = () => {
     return inquirer.prompt([
         {
@@ -111,6 +118,7 @@ const addDepartment = () => {
         })
 };
 
+// Add a role
 const addRole = () => {
     let departments = []
 
@@ -160,6 +168,7 @@ const addRole = () => {
     })
 };
 
+// Add an employee
 const addEmployee = () => {
     let roles = [];
 
@@ -239,6 +248,7 @@ const addEmployee = () => {
     });
 };
 
+// Update an employee role
 const updateRole = () => {
     db.query(`SELECT * FROM employee GROUP BY first_name, last_name`, (err, result) => {
         if (err) {
@@ -292,6 +302,7 @@ const updateRole = () => {
     })
 }
 
+// Update an employee's manager
 const updateManager = () => {
     db.query(`SELECT * FROM employee`, function (err, result) {
         if (err) {
@@ -348,6 +359,7 @@ const updateManager = () => {
 
 }
 
+// Delete departments
 const deleteDepartment = () => {
     const sql = `SELECT * FROM department GROUP BY name`;
     db.query(sql, (err, result) => {
@@ -388,6 +400,7 @@ const deleteDepartment = () => {
     })
 }
 
+// Delete roles
 const deleteRole = () => {
     const sql = `SELECT * FROM role GROUP BY title`;
     db.query(sql, (err, result) => {
@@ -428,9 +441,11 @@ const deleteRole = () => {
     })
 }
 
+// Quit
 const init = () => {
     db.end();
     console.log('Successfully ended!');
 };
 
+// Calls menu function
 menu();
