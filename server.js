@@ -41,7 +41,6 @@ const menu = () => {
                 addEmployee();
             } else if (data.menu === "Update an employee role") {
                 updateRole();
-                console.log("Updated an employee role");
             } else {
                 init();
             }
@@ -193,7 +192,7 @@ const addEmployee = () => {
                     type: "list",
                     name: "manager_id",
                     message: "What is the manager's name?",
-                    choices: employees
+                    choices: ["null"].concat(employees)
                 },
                 {
                     type: "list",
@@ -203,18 +202,31 @@ const addEmployee = () => {
                 }
             ])
                 .then(function ({ first_name, last_name, manager_id, role_id }) {
-                    let managerName = employees.indexOf(manager_id);
                     let roleName = roles.indexOf(role_id);
-                    const sql = `INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ( '${first_name}', '${last_name}', '${managerName}', '${roleName}' )`;
-                    db.query(sql, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                        } else if (result) {
-                            console.log(result);
-                            console.log("Added employee");
-                            menu();
-                        }
-                    })
+                    let managerName = employees.indexOf(manager_id);
+                    if (manager_id === "null") {
+                        const sql = `INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ( '${first_name}', '${last_name}', 'null', '${roleName}' )`;
+                        db.query(sql, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                            } else if (result) {
+                                console.log(result);
+                                console.log("Added employee");
+                                menu();
+                            }
+                        })
+                    } else {
+                        const sql = `INSERT INTO employee (first_name, last_name, manager_id, role_id) VALUES ( '${first_name}', '${last_name}', '${managerName}', '${roleName}' )`;
+                        db.query(sql, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                            } else if (result) {
+                                console.log(result);
+                                console.log("Added employee");
+                                menu();
+                            }
+                        })
+                    }
                 })
 
         });
