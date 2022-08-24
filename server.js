@@ -23,7 +23,7 @@ const menu = () => {
             type: "list",
             name: "menu",
             message: "Please select one of the following options from the menu.",
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Quit"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee manager", "Quit"]
         },
     ])
         .then((result) => {
@@ -41,6 +41,8 @@ const menu = () => {
                 addEmployee();
             } else if (result.menu === "Update an employee role") {
                 updateRole();
+            } else if (result.menu === "Update an employee manager") {
+                updateManager();
             } else {
                 init();
             }
@@ -258,15 +260,15 @@ const updateRole = () => {
 
             return inquirer.prompt([
                 {
-                    name: 'employee_id',
+                    name: "employee_id",
                     message: "Please select which employee's role you would like to update.",
-                    type: 'list',
+                    type: "list",
                     choices: employees
                 },
                 {
-                    name: 'role_id',
+                    name: "role_id",
                     message: "Please select the new role for the employee.",
-                    type: 'list',
+                    type: "list",
                     choices: roles
                 }
             ])
@@ -284,6 +286,62 @@ const updateRole = () => {
         })
 
     })
+}
+
+const updateManager = () => {
+    db.query(`SELECT * FROM employee`, function (err, result) {
+        if (err) {
+            console.log(err);
+        }
+
+        let employees = [];
+
+        for (let i = 0; i < result.length; i++) {
+            employees.push(result[i].first_name + " " + result[i].last_name)
+        }
+
+        return inquirer.prompt([
+            {
+                name: "employee_id",
+                message: "Please select which employee's manager you would like to update.",
+                type: "list",
+                choices: employees
+            },
+            {
+                name: "manager_id",
+                message: "Please select the new manager for the employee.",
+                type: "list",
+                choices: ["null"].concat(employees)
+            }
+        ])
+            .then(({ employee_id, manager_id }) => {
+                if (manager_id === "null") {
+                    const sql = `UPDATE employee SET manager_id = ${null} WHERE id = ${employees.indexOf(employee_id) + 1}`;
+                    db.query(sql, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        } else if (result) {
+                            console.log(result);
+                            console.log("Added employee");
+                            menu();
+                        }
+                    })
+                } else {
+                    const sql = `UPDATE employee SET manager_id = ${employees.indexOf(manager_id) + 1} WHERE id = ${employees.indexOf(employee_id) + 1}`;
+                    db.query(sql, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        } else if (result) {
+                            console.log(result);
+                            console.log("Added employee");
+                            menu();
+                        }
+                    })
+                }
+
+            })
+    })
+
 }
 
 const init = () => {
