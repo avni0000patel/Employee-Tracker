@@ -4,3 +4,28 @@ In this project I have created an application that allows you to view and manage
 https://github.com/avni0000patel
 ## Walkthrough Video Link
 https://drive.google.com/file/d/1TDYtpGVXX7-GUEbVkQ751GByKnDTpdCg/view
+## Technologies Used
+Javascript - creates a dynamic and interactive experience for the user
+
+Node JS - back-end JavaScript runtime environment that runs on a JavaScript Engine
+
+Inquirer - a collection of common interactive command line user interfaces
+
+Console Table - writes a table to the console
+
+MySql 2 - the MySQL connector library used by Sequelize to connect to the MySQL db server
+
+## Instructions
+Run the following:
+
+`npm init`
+
+`npm i`
+
+`npm install inquirer`
+
+`npm install console.table`
+
+`npm install mysql2`
+
+`node server.js` 
