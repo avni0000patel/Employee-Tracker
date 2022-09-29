@@ -13,7 +13,7 @@ Inquirer - a collection of common interactive command line user interfaces
 
 Console Table - writes a table to the console
 
-MySql 2 - the MySQL connector library used by Sequelize to connect to the MySQL db server
+MySQL - stores information in separate tables and connects with keys
 
 ## Instructions
 Run the following:
